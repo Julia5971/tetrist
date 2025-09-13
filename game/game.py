@@ -146,11 +146,14 @@ class Game:
     
     def check_game_over(self):
         """게임 오버 조건 확인"""
+        # 맨 위 줄에 블록이 있으면 게임 오버
+        if any(cell is not None for cell in self.board.grid[0]):
+            self.game_over = True
+            return
+        
         # 현재 블록이 맨 위에서 시작할 수 없으면 게임 오버
         if self.current_block and self.current_block.y <= 0:
-            # 맨 위 줄에 블록이 있는지 확인
-            if any(cell is not None for cell in self.board.grid[0]):
-                self.game_over = True
+            self.game_over = True
     
     def get_next_block_preview(self) -> Optional[Block]:
         """다음 블록 미리보기 (현재는 None 반환)"""
