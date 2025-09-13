@@ -10,7 +10,11 @@ class Game:
         """게임 초기화"""
         self.board = Board(12, 20)  # width를 12로 변경
         self.current_block: Optional[Block] = None
+<<<<<<< HEAD
         self.next_block: Optional[Block] = None
+=======
+        self.next_block: Optional[Block] = None  # 다음 블록 추가
+>>>>>>> 654eb805d9df3dd339e5764378df684cfd2ff2e8
         self.score = 0
         self.level = 1
         self.lines_cleared = 0
