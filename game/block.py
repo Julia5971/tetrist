@@ -93,6 +93,15 @@ class Block:
         
         return coordinates
     
+    def get_cells(self) -> List[Tuple[int, int]]:
+        """
+        현재 회전 상태에서 블록의 상대적 좌표를 반환 (렌더링용)
+        
+        Returns:
+            List[Tuple[int, int]]: 블록의 각 칸의 상대적 (x, y) 좌표 리스트
+        """
+        return BLOCK_SHAPES[self.block_type][self.rotation]
+    
     def rotate(self):
         """블록을 90도 시계방향으로 회전"""
         self.rotation = (self.rotation + 1) % 4
