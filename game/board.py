@@ -30,16 +30,11 @@ class Board:
         return 0 <= x < self.width and 0 <= y < self.height
     
     def place_block(self, block: Block):
-        """
-        블록을 보드에 배치
-        
-        Args:
-            block: 배치할 블록
-        """
-        coordinates = block.get_coordinates()
-        for x, y in coordinates:
-            if self.is_valid_position(x, y):
-                self.grid[y][x] = block.block_type.value
+        """블록을 보드에 배치"""
+        for x, y in block.get_coordinates():
+            if 0 <= x < self.width and 0 <= y < self.height:
+                # 블록 타입 정보를 함께 저장
+                self.grid[y][x] = block.block_type
     
     def check_collision(self, block: Block) -> bool:
         """
@@ -90,18 +85,17 @@ class Board:
         return full_lines
     
     def clear_full_lines(self):
-        """가득 찬 줄들을 제거하고 위의 블록들을 아래로 떨어뜨림"""
+        """가득 찬 줄들을 삭제하고 위의 블록들을 아래로 이동"""
         full_lines = self.get_full_lines()
         
-        if not full_lines:
-            return
+        if full_lines:
+            # 가득 찬 줄들을 삭제
+            for line in full_lines:
+                del self.grid[line]
+                # 맨 위에 빈 줄 추가
+                self.grid.insert(0, [None] * self.width)
         
-        # 가득 찬 줄들을 제거하고 위의 블록들을 아래로 떨어뜨림
-        for full_line in sorted(full_lines, reverse=True):
-            # full_line을 제거
-            del self.grid[full_line]
-            # 맨 위에 빈 줄 추가
-            self.grid.insert(0, [None for _ in range(self.width)])
+        return len(full_lines)
     
     def is_empty(self, x: int, y: int) -> bool:
         """

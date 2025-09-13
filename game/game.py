@@ -10,6 +10,7 @@ class Game:
         """게임 초기화"""
         self.board = Board()
         self.current_block: Optional[Block] = None
+        self.next_block: Optional[Block] = None  # 다음 블록 추가
         self.score = 0
         self.level = 1
         self.lines_cleared = 0
@@ -17,11 +18,24 @@ class Game:
     
     def spawn_new_block(self):
         """새 블록을 생성하고 보드 상단 중앙에 배치"""
-        # 랜덤한 블록 타입 선택
-        block_type = random.choice(list(BlockType))
-        
-        # 보드 상단 중앙에서 시작 (x=4, y=0)
-        self.current_block = Block(block_type, 4, 0)
+        # 첫 번째 블록인 경우
+        if self.current_block is None:
+            # 현재 블록 생성
+            block_type = random.choice(list(BlockType))
+            self.current_block = Block(block_type, 4, 0)
+            
+            # 다음 블록도 생성
+            block_type = random.choice(list(BlockType))
+            self.next_block = Block(block_type, 4, 0)
+        else:
+            # 현재 블록이 있으면 다음 블록으로 교체
+            self.current_block = self.next_block
+            self.current_block.x = 4
+            self.current_block.y = 0
+            
+            # 새로운 다음 블록 생성
+            block_type = random.choice(list(BlockType))
+            self.next_block = Block(block_type, 4, 0)
     
     def move_block_left(self):
         """현재 블록을 왼쪽으로 이동"""
@@ -110,8 +124,16 @@ class Game:
         # 게임 오버 확인
         self.check_game_over()
         
-        # 현재 블록을 None으로 설정
-        self.current_block = None
+        # 현재 블록을 다음 블록으로 교체
+        if self.next_block:
+            self.current_block = self.next_block
+            self.current_block.x = 4
+            self.current_block.y = 0
+            # 새로운 다음 블록 생성
+            block_type = random.choice(list(BlockType))
+            self.next_block = Block(block_type, 4, 0)
+        else:
+            self.current_block = None
     
     def clear_full_lines(self):
         """가득 찬 줄들을 삭제하고 점수 업데이트"""
@@ -156,8 +178,8 @@ class Game:
             self.game_over = True
     
     def get_next_block_preview(self) -> Optional[Block]:
-        """다음 블록 미리보기 (현재는 None 반환)"""
-        return None
+        """다음 블록 미리보기 반환"""
+        return self.next_block
     
     def get_drop_speed(self) -> float:
         """현재 레벨에 따른 블록 낙하 속도 반환"""
