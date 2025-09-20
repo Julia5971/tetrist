@@ -8,11 +8,7 @@ import random
 class GameRenderer:
     """테트리스 게임 렌더링 클래스"""
     
-<<<<<<< HEAD
     def __init__(self, width: int = 1536, height: int = 1152):  # 1024x768의 150%
-=======
-    def __init__(self, width: int = 800, height: int = 600):
->>>>>>> 654eb805d9df3dd339e5764378df684cfd2ff2e8
         """렌더러 초기화"""
         pygame.init()
         self.width = width
@@ -21,11 +17,7 @@ class GameRenderer:
         pygame.display.set_caption("테트리스 게임")
         
         # 일시정지 상태 추가
-<<<<<<< HEAD
         self.paused = False
-=======
-        self.paused = False  # 최소한의 구현
->>>>>>> 654eb805d9df3dd339e5764378df684cfd2ff2e8
         
         # 다채로운 색상 정의
         self.colors = {
@@ -46,17 +38,29 @@ class GameRenderer:
             'silver': (192, 192, 192),  # 은색
         }
         
-<<<<<<< HEAD
-        # 폰트 초기화 (최적화된 사이즈)
+        # 폰트 초기화 (D2Coding 폰트 사용)
         try:
-            # 메인 UI용 폰트 (조금 더 크게)
-            self.font = pygame.font.SysFont('arial', 28, bold=True)
-            # 컨트롤키용 폰트 (조금 더 작게)
-            self.small_font = pygame.font.SysFont('arial', 20, bold=True)
+            # D2Coding 폰트 사용 (한글 지원 우수)
+            self.font = pygame.font.SysFont('D2Coding', 28, bold=True)
+            self.small_font = pygame.font.SysFont('D2Coding', 20, bold=True)
+            print("D2Coding 폰트 사용 중")
         except:
-            # 기본 폰트 사용
-            self.font = pygame.font.Font(None, 28)
-            self.small_font = pygame.font.Font(None, 20)
+            try:
+                # D2Coding이 없으면 D2Coding Ver1.3 시도
+                self.font = pygame.font.SysFont('D2Coding Ver1.3', 28, bold=True)
+                self.small_font = pygame.font.SysFont('D2Coding Ver1.3', 20, bold=True)
+                print("D2Coding Ver1.3 폰트 사용 중")
+            except:
+                try:
+                    # D2Coding이 없으면 맑은 고딕 시도
+                    self.font = pygame.font.SysFont('malgun gothic', 28, bold=True)
+                    self.small_font = pygame.font.SysFont('malgun gothic', 20, bold=True)
+                    print("맑은 고딕 폰트 사용 중")
+                except:
+                    # 모든 폰트가 실패하면 기본 폰트 사용
+                    self.font = pygame.font.Font(None, 28)
+                    self.small_font = pygame.font.Font(None, 20)
+                    print("기본 폰트 사용 중")
         
         # 게임 보드 크기 및 위치 (중앙 정렬)
         self.board_width = 12  # 10 → 12 (15% 증가)
@@ -76,18 +80,6 @@ class GameRenderer:
         # 컨트롤키 영역 설정 (게임보드 왼쪽, 더 넓은 간격)
         self.controls_x = self.board_x - 300  # 간격을 250에서 300으로 증가
         self.controls_y = self.board_y + 30   # 게임보드 상단에서 30픽셀 아래
-=======
-        # 폰트 초기화
-        self.font = pygame.font.Font(None, 36)
-        self.small_font = pygame.font.Font(None, 24)
-        
-        # 게임 보드 크기 및 위치
-        self.board_width = 10
-        self.board_height = 20
-        self.cell_size = 30
-        self.board_x = 50
-        self.board_y = 50
->>>>>>> 654eb805d9df3dd339e5764378df684cfd2ff2e8
     
     def render_game(self, game: Game):
         """전체 게임 화면 렌더링"""
@@ -186,61 +178,43 @@ class GameRenderer:
     
     def render_ui(self, game: Game):
         """UI 요소 렌더링"""
-<<<<<<< HEAD
         # 점수 표시 (금색, 더 큰 폰트)
-        score_text = self.font.render(f"Score: {game.score}", True, self.colors['gold'])
+        score_text = self.font.render(f"점수: {game.score}", True, self.colors['gold'])
         self.screen.blit(score_text, (self.ui_x, self.ui_y))
         
         # 레벨 표시 (파란색)
-        level_text = self.font.render(f"Level: {game.level}", True, self.colors['blue'])
+        level_text = self.font.render(f"레벨: {game.level}", True, self.colors['blue'])
         self.screen.blit(level_text, (self.ui_x, self.ui_y + 60))  # 간격 증가
         
         # 삭제된 줄 수 표시 (라임색)
-        lines_text = self.font.render(f"Lines: {game.lines_cleared}", True, self.colors['lime'])
-        self.screen.blit(lines_text, (self.ui_x, self.ui_y + 120))  # 간격 증가
-=======
-        # 점수 표시 (금색)
-        score_text = self.font.render(f"점수: {game.score}", True, self.colors['gold'])
-        self.screen.blit(score_text, (400, 50))
-        
-        # 레벨 표시 (파란색)
-        level_text = self.font.render(f"레벨: {game.level}", True, self.colors['blue'])
-        self.screen.blit(level_text, (400, 100))
-        
-        # 삭제된 줄 수 표시 (라임색)
         lines_text = self.font.render(f"줄: {game.lines_cleared}", True, self.colors['lime'])
-        self.screen.blit(lines_text, (400, 150))
->>>>>>> 654eb805d9df3dd339e5764378df684cfd2ff2e8
+        self.screen.blit(lines_text, (self.ui_x, self.ui_y + 120))  # 간격 증가
         
         # 다음 블록 미리보기
         self.render_next_block_preview(game)
         
-<<<<<<< HEAD
         # 컨트롤키 안내
         self.render_controls()
         
-=======
->>>>>>> 654eb805d9df3dd339e5764378df684cfd2ff2e8
         # 게임 오버 메시지
         if game.game_over:
             self.render_game_over_screen()
     
-<<<<<<< HEAD
     def render_controls(self):
         """컨트롤키 안내 렌더링 (작은 폰트)"""
         # 컨트롤키 제목
-        controls_title = self.small_font.render("Controls:", True, self.colors['silver'])
+        controls_title = self.small_font.render("컨트롤:", True, self.colors['silver'])
         self.screen.blit(controls_title, (self.controls_x, self.controls_y))
         
         # 컨트롤키 목록
         controls = [
-            "Left/Right : Move Block",
-            "Down : Fast Drop", 
-            "Up : Rotate Block",
-            "Space : Instant Drop",
-            "P : Pause",
-            "R : Restart",
-            "ESC : Exit"
+            "← → : 블록 이동",
+            "↓ : 블록 빠른 낙하", 
+            "↑ : 블록 회전",
+            "스페이스 : 블록 즉시 낙하",
+            "P : 일시정지",
+            "R : 게임 재시작",
+            "ESC : 게임 종료"
         ]
         
         for i, control in enumerate(controls):
@@ -254,37 +228,19 @@ class GameRenderer:
         preview_y = self.ui_y + 180  # 간격 증가
         
         # 미리보기 제목 (은색, 작은 폰트)
-        preview_title = self.small_font.render("Next Block:", True, self.colors['silver'])
-=======
-    def render_next_block_preview(self, game: Game):
-        """다음 블록 미리보기 렌더링"""
-        # 다음 블록 미리보기 영역
-        preview_x = 400
-        preview_y = 200
-        
-        # 미리보기 제목 (은색)
         preview_title = self.small_font.render("다음 블록:", True, self.colors['silver'])
->>>>>>> 654eb805d9df3dd339e5764378df684cfd2ff2e8
         self.screen.blit(preview_title, (preview_x, preview_y))
         
         # 다음 블록 그리기
         next_block = game.get_next_block_preview()
         if next_block:
             # 미리보기 블록을 중앙에 배치
-<<<<<<< HEAD
             preview_cell_size = 30  # 미리보기 블록 크기 조정
-=======
-            preview_cell_size = 25
->>>>>>> 654eb805d9df3dd339e5764378df684cfd2ff2e8
             block_width = max([x for x, y in next_block.get_cells()]) + 1
             block_height = max([y for x, y in next_block.get_cells()]) + 1
             
             center_x = preview_x + (4 * preview_cell_size - block_width * preview_cell_size) // 2
-<<<<<<< HEAD
             center_y = preview_y + 40  # 간격 조정
-=======
-            center_y = preview_y + 40
->>>>>>> 654eb805d9df3dd339e5764378df684cfd2ff2e8
             
             self.render_preview_block(next_block, center_x, center_y, preview_cell_size)
     
@@ -305,29 +261,16 @@ class GameRenderer:
         # 반투명 오버레이
         overlay = pygame.Surface((self.width, self.height))
         overlay.set_alpha(128)
-<<<<<<< HEAD
         overlay.fill(self.colors['background'])
         self.screen.blit(overlay, (0, 0))
         
         # 게임 오버 메시지
-        game_over_text = self.font.render("GAME OVER", True, self.colors['red'])
-        text_rect = game_over_text.get_rect(center=(self.width // 2, self.height // 2 - 50))
-        self.screen.blit(game_over_text, text_rect)
-        
-        # 재시작 안내
-        restart_text = self.font.render("Press R to Restart", True, self.colors['text'])
-=======
-        overlay.fill((0, 0, 0))
-        self.screen.blit(overlay, (0, 0))
-        
-        # 게임 오버 메시지 (빨간색)
         game_over_text = self.font.render("게임 오버!", True, self.colors['red'])
         text_rect = game_over_text.get_rect(center=(self.width // 2, self.height // 2 - 50))
         self.screen.blit(game_over_text, text_rect)
         
-        # 재시작 안내 (핑크색)
-        restart_text = self.small_font.render("R키를 눌러 재시작", True, self.colors['pink'])
->>>>>>> 654eb805d9df3dd339e5764378df684cfd2ff2e8
+        # 재시작 안내
+        restart_text = self.font.render("R키를 눌러 재시작", True, self.colors['text'])
         restart_rect = restart_text.get_rect(center=(self.width // 2, self.height // 2 + 20))
         self.screen.blit(restart_text, restart_rect)
     
@@ -374,24 +317,11 @@ class GameRenderer:
         return True
     
     def render_pause_screen(self):
-<<<<<<< HEAD
         """일시정지 화면 렌더링"""
         # 반투명 오버레이
         overlay = pygame.Surface((self.width, self.height))
         overlay.set_alpha(128)
         overlay.fill(self.colors['background'])
-        self.screen.blit(overlay, (0, 0))
-        
-        # 일시정지 메시지
-        pause_text = self.font.render("PAUSED", True, self.colors['yellow'])
-        text_rect = pause_text.get_rect(center=(self.width // 2, self.height // 2))
-        self.screen.blit(pause_text, text_rect)
-=======
-        """일시정지 화면 렌더링 (완전한 구현)"""
-        # 반투명 오버레이
-        overlay = pygame.Surface((self.width, self.height))
-        overlay.set_alpha(128)
-        overlay.fill((0, 0, 0))
         self.screen.blit(overlay, (0, 0))
         
         # 일시정지 메시지
@@ -403,7 +333,6 @@ class GameRenderer:
         resume_text = self.small_font.render("P키를 눌러 재개", True, self.colors['green'])
         resume_rect = resume_text.get_rect(center=(self.width // 2, self.height // 2 + 20))
         self.screen.blit(resume_text, resume_rect)
->>>>>>> 654eb805d9df3dd339e5764378df684cfd2ff2e8
     
     def run_game_loop(self, game: Game):
         """메인 게임 루프 실행"""
